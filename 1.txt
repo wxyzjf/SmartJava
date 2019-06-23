@@ -1,0 +1,187 @@
+package test;
+
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+public class HelloWorld {
+  public static void main(String[] args) { 
+    try{
+      FileReader reader = new FileReader("C:\\Users\\Administrator\\Desktop\\shuiyin-master\\shuiyin-master\\testjava.txt");
+      BufferedReader br = new BufferedReader(reader);
+      String str = null;
+      int num = 0;
+//      while((str = br.readLine())!=null){
+//    	  num = str.lastIndexOf(2);
+//    	  System.out.println(num);
+//      }
+      while((str = br.readLine())!=null){
+        if(str.contains("Record")&&str.contains("EGSNPDPRecord")){
+          System.out.println(str.substring(8,9));
+        }
+        if(str.contains("recordType")){
+          System.out.print(str.substring(13,17));
+        }
+        if(str.contains("servedIMSI")){
+          System.out.print("|" + str.substring(13));
+        } 
+        if(str.contains("ggsniPBinV4Address")){
+        	str = str.substring(21);
+        	str = str.replaceAll("(\\d{3})(\\d{3})(\\d{3})(\\d{3})", "$1.$2.$3.$4").replaceAll("0+","");
+        	System.out.print("|" + str);
+        } 
+        if(str.contains("accessPointName")){
+          str = str.substring(18);
+          /*          String strstr = "0123456789ABCDEF";
+          char[] hexs = str.toCharArray();
+          byte[] bytes = new byte[str.length()/2];
+          int n;
+          for(int i = 0; i < bytes.length; i++){
+            n = strstr.indexOf(hexs[2*i])*16;
+            n += strstr.indexOf(hexs[2*i+1]);
+            bytes[i] = (byte)(n & 0xff);
+          }
+          System.out.print("|" + new String(bytes));*/
+        	
+          System.out.print("|" + decode(str));
+        	
+        	
+        } 
+        
+        
+        if(str.contains("End")){
+          SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+          System.out.println("|" + df.format(new Date()));
+          System.out.println("90: " );
+        }
+      }
+      br.close();
+      reader.close();
+    }catch(IOException e){
+      e.printStackTrace();
+    }
+  }
+  
+  public static String decode(String bytes) {
+/*	  String hexString = "0123456789ABCDEF";
+	    ByteArrayOutputStream baos = new ByteArrayOutputStream(bytes.length() / 2);
+	    // 将每2位16进制整数组装成一个字节
+	    for (int i = 0; i < bytes.length(); i += 2)
+	    baos.write((hexString.indexOf(bytes.charAt(i)) << 4 | hexString
+	                    .indexOf(bytes.charAt(i + 1))));
+	    return new String(baos.toByteArray());*/
+
+	  
+	  
+
+/*	    String str = "0123456789ABCDEF";
+	    char[] hexs = bytes.toCharArray();
+	    byte[] bytenum = new byte[bytes.length() / 2];
+	    int n;
+	    for (int i = 0; i < bytenum.length; i++) {
+	        n = str.indexOf(hexs[2 * i]) * 16;
+	        n += str.indexOf(hexs[2 * i + 1]);
+	        bytenum[i] = (byte) (n & 0xff);
+	    }
+	    return new String(bytenum);*/
+	  
+
+/*      byte[] baKeyword = new byte[bytes.length() / 2];
+      for (int i = 0; i < baKeyword.length; i++) {
+       try {
+        baKeyword[i] = (byte) (0xff & Integer.parseInt(bytes.substring(
+          i * 2, i * 2 + 2), 16));
+       } catch (Exception e) {
+        e.printStackTrace();
+       }
+      }
+      try {
+    	  bytes = new String(baKeyword, "utf-8");// UTF-16le:Not
+      } catch (Exception e1) {
+       e1.printStackTrace();
+      }
+      return bytes;*/
+   
+/*      String digital = "0123456789ABCDEF";  
+      char[] hex2char = bytes.toCharArray();  
+      byte[] bytenum = new byte[bytes.length() / 2];  
+      int temp;  
+      for (int i = 0; i < bytenum.length; i++) {  
+          temp = digital.indexOf(hex2char[2 * i]) * 16;  
+          temp += digital.indexOf(hex2char[2 * i + 1]);  
+          bytenum[i] = (byte) (temp & 0xff);  
+      }  
+      return new String(bytenum);  */
+	  
+/*	       String str = "0123456789ABCDEF";
+	       char[] hexs = bytes.toCharArray();
+	       byte[] bytenum = new byte[bytes.length() / 2];
+	      int n;
+	      for (int i = 0; i < bytenum.length; i++) {
+	          n = str.indexOf(hexs[2 * i]) * 16;
+	          n += str.indexOf(hexs[2 * i + 1]);
+	          bytenum[i] = (byte) (n & 0xff);
+	      }
+	      return new String(bytenum);*/
+	    if (bytes == null || bytes.equals("")) {
+	        return null;
+	    }
+	    bytes = bytes.replace(" ", "");
+	    byte[] baKeyword = new byte[bytes.length() / 2];
+	    for (int i = 0; i < baKeyword.length; i++) {
+	        try {
+	            baKeyword[i] = (byte) (0xff & Integer.parseInt(bytes.substring(i * 2, i * 2 + 2), 16));
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    try {
+	    	bytes = new String(baKeyword, "UTF-8");
+	        new String();
+	    } catch (Exception e1) {
+	        e1.printStackTrace();
+	    }
+	    return bytes;
+	}
+  
+}
+
+
+/*
+1）从字符串中截取一段内容，使用substring，示例：
+    String str = "9,10,11,";
+    int length = str.length();
+    //输出倒数第一
+    System.err.println(str.substring(length - 3, length - 1));//输出11
+2）返回字符串中指定下标的字符，使用charAt，示例：
+    String str = "9,10,11,";
+    System.err.println(str.charAt(length - 2));//输出1
+3）使用indexOf函数返回字符串中指定字符的最小下标
+        System.err.println(str.indexOf("1"));//输出2
+4）使用lastIndexOf函数返回字符串中指定字符的最大下标
+        System.err.println(str.indexOf("1"));//输出6
+      */   
+
+/*          
+if(str == null || str.equals("")){
+  str = null;
+}
+str = str.replace(" ","");
+byte[] baKeyword = new byte[str.length() / 2];
+for(int i = 0; i < baKeyword.length; i++){
+  try{
+    baKeyword[i] = (byte)(0xff & Integer.parseInt(str.substring(i*2,i*2+2),16));
+  }catch (Exception e){
+    e.printStackTrace();
+  }
+}
+  try{
+    str = new String(baKeyword,"UTF-8");
+    new String();
+  }catch (Exception e1){
+    e1.printStackTrace();
+  }
+  System.out.print("|" + str);
+*/ 
